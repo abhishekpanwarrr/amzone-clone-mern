@@ -1,0 +1,13 @@
+{
+  "name": "amazon-backend",
+  "version": "1.0.0",
+  "description": "Backend in MERN for amazon",
+  "main": "index.js",
+  "author": "Abhishek Panwar",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.3"
+  }
+}
