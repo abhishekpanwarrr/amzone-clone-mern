@@ -1,8 +1,14 @@
-import React from 'react'
+import Navbar from '../../components/Navbar'
+import SliderBox from '../../components/Slider'
+import AllProducts from '../AllProducts'
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
+    <>
+      <Navbar />
+      <SliderBox />
+      <AllProducts />
+    </>
   )
 }
 
