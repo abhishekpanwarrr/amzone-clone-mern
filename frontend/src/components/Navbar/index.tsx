@@ -11,7 +11,8 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-// "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg
+import { Link } from "react-router-dom";
+import { Box } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -21,7 +22,7 @@ const Search = styled("div")(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   width: "100%",
-  flex: 1,
+  // flex: 1,
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
     width: "auto",
@@ -47,9 +48,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
-      width: "12ch",
+      width: "80ch",
       "&:focus": {
-        width: "20ch",
+        width: "100ch",
       },
     },
   },
@@ -66,9 +67,26 @@ const Navbar = () => {
     setAnchorEl(null);
   };
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <img src={navLogo} width={60} height={60} style={{ marginRight: 20 }} />
+    <AppBar
+      position="fixed"
+      sx={{
+        bgcolor: "#222",
+      }}
+    >
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Link to={"/home"}>
+          <img
+            src={navLogo}
+            width={80}
+            height={60}
+            style={{ marginRight: 20 }}
+          />
+        </Link>
         <Search>
           <SearchIconWrapper>
             <SearchIcon />
@@ -78,47 +96,50 @@ const Navbar = () => {
             inputProps={{ "aria-label": "search" }}
           />
         </Search>
-        {auth && (
-          <div
-            style={{
-              marginLeft: 20,
-            }}
-          >
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
+
+        <Box display={"flex"} justifyContent={"space-between"}>
+          {auth && (
+            <div
+              style={{
+                marginLeft: 20,
+                marginRight: 10,
+              }}
             >
-              <AccountCircle
-                sx={{
-                  fontSize: 30,
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle
+                  sx={{
+                    fontSize: 30,
+                  }}
+                />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
                 }}
-              />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-            </Menu>
-          </div>
-        )}
-        {/* <IconButton
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+              </Menu>
+            </div>
+          )}
+          {/* <IconButton
           size="large"
           edge="start"
           color="inherit"
@@ -128,15 +149,18 @@ const Navbar = () => {
           <MenuIcon
           />
         </IconButton> */}
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-        >
-          <ShoppingCartIcon sx={{ fontSize: 30 }} />
-        </IconButton>
+          <Link to={"/cart"}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <ShoppingCartIcon sx={{ fontSize: 30, color: "white" }} />
+            </IconButton>
+          </Link>
+        </Box>
       </Toolbar>
     </AppBar>
   );

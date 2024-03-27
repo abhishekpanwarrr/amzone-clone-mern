@@ -11,8 +11,10 @@ import { themeSettings } from "./theme";
 import { useSelector } from "react-redux";
 import LoginPage from "./pages/Login/LoginPage";
 import HomePage from "./pages/Home/HomePage";
-import ProfilePage from "./pages/Profile/ProfilePage";
 import Signup from "./pages/Signup/Signup";
+import Cart from "./pages/Cart";
+import Navbar from "./components/Navbar";
+import SingleProduct from "./pages/SingleProduct";
 
 const App = () => {
   const mode = useSelector((state: { mode: PaletteMode }) => state.mode);
@@ -24,6 +26,7 @@ const App = () => {
     <Router>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        {isAuth && <Navbar />}
         <Routes>
           <Route
             path="/"
@@ -38,8 +41,16 @@ const App = () => {
             element={isAuth ? <HomePage /> : <Navigate to="/" />}
           />
           <Route
-            path="/profile/:userId"
-            element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+            path="/product/:id"
+            element={isAuth ? <SingleProduct /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/cart"
+            element={isAuth ? <Cart /> : <Navigate to="/" />}
+          />
+          <Route 
+          path="*"
+          element={<p>Not found</p>} 
           />
         </Routes>
       </ThemeProvider>

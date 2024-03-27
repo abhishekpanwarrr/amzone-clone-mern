@@ -1,4 +1,3 @@
-import * as React from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -8,8 +7,14 @@ import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { Box, Button, Divider } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const AllProduct = ({ item }) => {
+const AllProduct = ({ item }: any) => {
+  console.log("item", item);
+  const navigate = useNavigate();
+
+  const handleProduct = async (id: any) => navigate(`/product/${id}`);
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
@@ -38,8 +43,12 @@ const AllProduct = ({ item }) => {
             <Button variant="outlined" size="small">
               Add to Cart
             </Button>
-            <Button size="small" variant="contained">
-              Buy now
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => handleProduct(item?.id)}
+            >
+              See more
             </Button>
           </Box>
           <Divider />

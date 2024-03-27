@@ -67,7 +67,7 @@ const SliderBox = () => {
             <Box
               width={"100%"}
               key={item.id}
-              height={"550px"}
+              height={"auto"}
               position={"relative"}
             >
               <img

@@ -1,15 +1,14 @@
-import Navbar from '../../components/Navbar'
-import SliderBox from '../../components/Slider'
-import AllProducts from '../AllProducts'
+import { Box } from "@mui/material";
+import SliderBox from "../../components/Slider";
+import AllProducts from "../AllProducts";
 
 const HomePage = () => {
   return (
-    <>
-      <Navbar />
+    <Box mt={9}>
       <SliderBox />
       <AllProducts />
-    </>
-  )
-}
+    </Box>
+  );
+};
 
-export default HomePage
+export default HomePage;
