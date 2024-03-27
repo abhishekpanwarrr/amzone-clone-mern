@@ -15,6 +15,10 @@ import Signup from "./pages/Signup/Signup";
 import Cart from "./pages/Cart";
 import Navbar from "./components/Navbar";
 import SingleProduct from "./pages/SingleProduct";
+import Footer from "./components/Footer";
+import Privacy from "./pages/Privacy";
+import Legal from "./pages/Legal";
+import Terms from "./pages/Terms";
 
 const App = () => {
   const mode = useSelector((state: { mode: PaletteMode }) => state.mode);
@@ -48,11 +52,21 @@ const App = () => {
             path="/cart"
             element={isAuth ? <Cart /> : <Navigate to="/" />}
           />
-          <Route 
-          path="*"
-          element={<p>Not found</p>} 
+          <Route
+            path="/privacy"
+            element={isAuth ? <Privacy /> : <Navigate to="/" />}
           />
+          <Route
+            path="/legal"
+            element={isAuth ? <Legal /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/terms"
+            element={isAuth ? <Terms /> : <Navigate to="/" />}
+          />
+          <Route path="*" element={<p>Not found</p>} />
         </Routes>
+        {isAuth && <Footer />}
       </ThemeProvider>
     </Router>
   );
