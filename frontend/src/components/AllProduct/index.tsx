@@ -10,10 +10,9 @@ import { Box, Button, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const AllProduct = ({ item }: any) => {
-  console.log("item", item);
   const navigate = useNavigate();
-
-  const handleProduct = async (id: any) => navigate(`/product/${id}`);
+  const handleProduct = async (id: any) =>
+    navigate(`/product/${id}`, { state: item, replace: true });
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -21,6 +20,9 @@ const AllProduct = ({ item }: any) => {
         component="img"
         height="194"
         image={item.imageurl}
+        sx={{
+          objectFit: "contain",
+        }}
         alt="Paella dish"
       />
       <CardContent>
@@ -28,6 +30,20 @@ const AllProduct = ({ item }: any) => {
           {item.title}
         </Typography>
       </CardContent>
+      <CardContent>
+        <Typography paragraph fontWeight={"400"}>
+          Descritpion:
+        </Typography>
+        <Typography
+          paragraph
+          fontSize={"14px"}
+          maxHeight={60}
+          overflow={"clip"}
+        >
+          {item.description}
+        </Typography>
+      </CardContent>
+      <Divider />
       <CardActions disableSpacing>
         <Box display={"flex"} flexDirection={"column"} width={"100%"}>
           <Box display={"flex"} justifyContent={"space-between"}>
@@ -51,17 +67,8 @@ const AllProduct = ({ item }: any) => {
               See more
             </Button>
           </Box>
-          <Divider />
         </Box>
       </CardActions>
-      <CardContent>
-        <Typography paragraph fontWeight={"400"}>
-          Descritpion:
-        </Typography>
-        <Typography paragraph fontSize={"14px"}>
-          {item.description}
-        </Typography>
-      </CardContent>
     </Card>
   );
 };

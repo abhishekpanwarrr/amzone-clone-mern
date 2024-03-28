@@ -12,7 +12,8 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Badge, Box } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -55,10 +56,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
 const Navbar = () => {
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const cart = useSelector((state) => state.cart);
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,7 +70,7 @@ const Navbar = () => {
   };
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       sx={{
         bgcolor: "#222",
       }}
@@ -157,7 +159,9 @@ const Navbar = () => {
               aria-label="menu"
               sx={{ mr: 2 }}
             >
-              <ShoppingCartIcon sx={{ fontSize: 30, color: "white" }} />
+              <Badge badgeContent={cart.length ?? 0} color="warning">
+                <ShoppingCartIcon sx={{ fontSize: 30, color: "white" }} />
+              </Badge>
             </IconButton>
           </Link>
         </Box>

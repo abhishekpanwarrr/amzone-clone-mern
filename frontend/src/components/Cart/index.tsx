@@ -8,19 +8,18 @@ import {
   Typography,
 } from "@mui/material";
 
-const CartItem = () => {
+const CartItem = ({ item }: any) => {
   return (
-    <Card sx={{ display: "flex" }}>
+    <Card sx={{ display: "flex"}}>
       <CardMedia
         sx={{
           flex: 1,
+          objectFit: "contain",
         }}
         component="img"
         width={350}
         height="194"
-        image={
-          "https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-        }
+        image={item.imageurl}
         alt="Paella dish"
       />
       <CardContent
@@ -30,29 +29,41 @@ const CartItem = () => {
       >
         <Stack gap={1}>
           <Typography variant="h4" fontWeight={600} color="text.primary">
-            Item one
+            {item.title}
           </Typography>
-          <Typography variant="body2" fontWeight={400} color="text.secondary">
-            Color
+          <Typography variant="body2" fontWeight={400} color="text.secondary" maxHeight={69} overflow={"hidden"}>
+            Description: {item.description}
           </Typography>
-          <Typography variant="body2" fontWeight={400} color="text.secondary">
-            Style
+          <Typography
+            variant="body2"
+            fontWeight={400}
+            color="text.secondary"
+            bgcolor={"beige"}
+            width={"max-content"}
+            px={2}
+            py={1}
+            sx={{
+              fontWeight: 600,
+            }}
+            borderRadius={2}
+          >
+            Quantity: {item.quantity}
           </Typography>
-          <Typography variant="body2" fontWeight={400} color="text.secondary">
-            Quantity
+          <Typography
+            variant="body2"
+            fontWeight={400}
+            color="text.secondary"
+            bgcolor={"bisque"}
+            width={"max-content"}
+            px={2}
+            py={1}
+            borderRadius={2}
+            sx={{
+              fontWeight: 600,
+            }}
+          >
+            Price: ₹ {item.price}
           </Typography>
-          <Box>
-            <Typography
-              variant="caption"
-              fontWeight={400}
-              color="text.secondary"
-              mr={1}
-            >
-              Price:
-            </Typography>
-
-            <Button variant="outlined">$ 999</Button>
-          </Box>
         </Stack>
       </CardContent>
     </Card>
