@@ -140,8 +140,8 @@ export const allProducts = [
       "brand": "Fastrack",
       "model": "FX100",
       "colour": "Black",
-      "Form Factor": "In Ear",
-      "Connectivity Technology": "Wireless"
+      "form factor": "In Ear",
+      "connectivity technology": "Wireless"
     }
   },
   {
@@ -151,11 +151,11 @@ export const allProducts = [
     "imageurl": "https://m.media-amazon.com/images/I/61wDAWFHDpL._SL1500_.jpg",
     "price": 549,
     "extraDetails": {
-      "Brand": "Tobfit",
-      "Colour": "Black",
-      "Form Factor": "Basic Case",
-      "Compatible Phone Models": "Samsung Galaxy A54",
-      "Material": "Silicone"
+      "brand": "Tobfit",
+      "color": "Black",
+      "form factor": "Basic Case",
+      "compatible Phone Models": "Samsung Galaxy A54",
+      "material": "Silicone"
     }
   },
   {

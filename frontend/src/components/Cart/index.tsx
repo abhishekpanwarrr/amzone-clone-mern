@@ -4,13 +4,24 @@ import {
   Card,
   CardContent,
   CardMedia,
+  IconButton,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { removeFromCart } from "../../redux/state";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const CartItem = ({ item }: any) => {
+  // const removeItem =() =>{}
+  const dispatch = useDispatch();
+
+  const removeItem = (itemId: string) => {
+    dispatch(removeFromCart(itemId));
+  };
   return (
-    <Card sx={{ display: "flex"}}>
+    <Card sx={{ display: "flex" }}>
       <CardMedia
         sx={{
           flex: 1,
@@ -31,7 +42,13 @@ const CartItem = ({ item }: any) => {
           <Typography variant="h4" fontWeight={600} color="text.primary">
             {item.title}
           </Typography>
-          <Typography variant="body2" fontWeight={400} color="text.secondary" maxHeight={69} overflow={"hidden"}>
+          <Typography
+            variant="body2"
+            fontWeight={400}
+            color="text.secondary"
+            maxHeight={69}
+            overflow={"hidden"}
+          >
             Description: {item.description}
           </Typography>
           <Typography
@@ -65,6 +82,18 @@ const CartItem = ({ item }: any) => {
             Price: ₹ {item.price}
           </Typography>
         </Stack>
+        <Box display={"flex"} justifyContent={"end"}>
+          <Tooltip title="Delete item" placement="left">
+            <IconButton
+              size="large"
+              aria-label="close"
+              color="inherit"
+              onClick={() => removeItem(item.id)}
+            >
+              <DeleteIcon sx={{ color: "chocolate" }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </CardContent>
     </Card>
   );

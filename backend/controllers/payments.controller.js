@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
   const options = {
     amount: req.body.amount,
     currency: "INR",
-    receipt: req.body.orderId,
+    receipt: crypto.randomBytes(10).toString("hex"),
     payment_capture: 1,
   };
   try {
@@ -54,23 +54,34 @@ const checkSuccess = async (req, res) => {
     console.log("🚀 ~ checkSuccess ~ razorpayOrderId:", razorpayOrderId);
     console.log("🚀 ~ checkSuccess ~ razorpayPaymentId:", razorpayPaymentId);
     console.log("🚀 ~ checkSuccess ~ orderCreationId:", orderCreationId);
-
-    const shasum = await crypto.createHmac("sha256", "w2lBtgmeuDUfnJVp43UpcaiT");
-    console.log("🚀 ~ checkSuccess ~ shasum:", shasum);
-
+    const sign = razorpayOrderId + "|" + razorpayPaymentId;
+    // const shasum = await crypto.createHmac("sha256", "w2lBtgmeuDUfnJVp43UpcaiT");
+    // console.log("🚀 ~ checkSuccess ~ shasum:", shasum);
+    const expectedSign = crypto
+      .createHmac("sha256", process.env.KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
     shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
 
-    const digest = await shasum.digest("hex");
-    console.log("🚀 ~ checkSuccess ~ digest:", digest);
+    // const digest = await shasum.digest("hex");
+    // console.log("🚀 ~ checkSuccess ~ digest:", digest);
 
-    if (digest !== razorpaySignature)
-      return res.status(400).json({ msg: "Transaction not legit!" });
-
-    res.status(200).json({
-      msg: "success",
-      orderId: razorpayOrderId,
-      paymentId: razorpayPaymentId,
-    });
+    // if (digest !== razorpaySignature)
+    //   return res.status(400).json({ msg: "Transaction not legit!" });
+    if (razorpaySignature === expectedSign) {
+      return res.status(200).json({
+        msg: "success",
+        orderId: razorpayOrderId,
+        paymentId: razorpayPaymentId,
+      });
+    } else {
+      return res.status(400).json({ message: "Invalid signature sent!" });
+    }
+    // res.status(200).json({
+    //   msg: "success",
+    //   orderId: razorpayOrderId,
+    //   paymentId: razorpayPaymentId,
+    // });
   } catch (error) {
     res.status(500).send(error);
   }

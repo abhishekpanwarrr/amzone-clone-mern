@@ -18,6 +18,7 @@ interface AuthState {
     token: string | null;
     posts: Post[];
     cart: []
+    likedProducts: []
 }
 
 interface SetLoginPayload {
@@ -39,13 +40,28 @@ const initialState: AuthState = {
     user: null,
     token: null,
     posts: [],
-    cart: []
+    cart: [],
+    likedProducts: [],
 }
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        likeDislikeProduct: (state, action) => {
+            const id = action.payload;
+            const existingItemIndex = state.likedProducts.findIndex(item => item === id);
+
+            if (existingItemIndex === -1) {
+                state.likedProducts.push(id); // Add the id to likedProducts array
+            } else {
+                state.likedProducts.splice(existingItemIndex, 1); // Remove the id from likedProducts array
+            }
+        },
+        removeFromCart: (state, action) => {
+            const idToRemove = action.payload;
+            state.cart = state.cart.filter(item => item.id !== idToRemove);
+        },
         addToCart: (state, action) => {
             const { id, quantity } = action.payload;
             const existingItem = state.cart.find(item => item.id === id);
@@ -68,28 +84,8 @@ export const authSlice = createSlice({
             state.user = null
             state.token = null
         },
-        setFriends: (state, action: PayloadAction<SetFriendsPayload>) => {
-            if (state.user) {
-                state.user.friends = action.payload.friends
-            } else {
-                console.log("");
-
-            }
-        },
-        setPosts: (state, action: PayloadAction<{ posts: Post[] }>) => {
-            state.posts = action.payload.posts
-        },
-        setPost: (state, action: PayloadAction<SetPostPayload>) => {
-            const updatedPosts = state.posts.map(post => {
-                if (post._id === action.payload.post_id) {
-                    return action.payload.post
-                }
-                return post
-            })
-            state.posts = updatedPosts
-        }
     }
 })
 
-export const { setMode, setLogin, setLogout, setFriends, setPost, setPosts, addToCart } = authSlice.actions;
+export const { setMode, setLogin, setLogout, addToCart, likeDislikeProduct, removeFromCart } = authSlice.actions;
 export default authSlice.reducer

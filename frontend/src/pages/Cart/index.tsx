@@ -42,30 +42,24 @@ const Cart = () => {
       "https://checkout.razorpay.com/v1/checkout.js"
     );
 
-    console.log("🚀 ~ displayRazorpay ~ res:", res);
     if (!res) {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
-
-    // creating a new order
     const result = await axios.post("http://localhost:8000/payment/orders", {
-      amount: totalPrice * 100,
+      amount: totalPrice,
       orderId: uuidv4(),
     });
-    console.log("🚀 ~ displayRazorpay ~ result:", result);
 
     if (!result) {
       alert("Server error. Are you online?");
       return;
     }
-
-    // Getting the order details back
-    const { amount, id: order_id, currency } = result.data;
+    const { amount, id: order_id, currency } = result.data.data;
 
     const options = {
-      key: "rzp_test_ZKW9P6DhoEOS2s",
-      amount: amount.toString(),
+      key: import.meta.env.RAZOR_KEY,
+      amount: amount,
       currency: currency,
       name: "Abhishek Corp.",
       description: "Test Transaction",
@@ -80,11 +74,15 @@ const Cart = () => {
         };
 
         const result = await axios.post(
-          "http://localhost:8000/payment/success",
+          "http://localhost:8000/payment/verify",
           data
         );
-        alert("payment success");
-        alert(result.data.msg);
+        if (result.status === 200) {
+          alert("payment success");
+          alert(result.data.message);
+        } else {
+          alert("Something went wrong please connect with us.");
+        }
       },
       notes: {
         address: "Abhishek Corporate Office",
@@ -101,7 +99,7 @@ const Cart = () => {
   return (
     <Box display={"flex"} justifyContent={"space-between"} minHeight={"70dvh"}>
       <Box flex={4} px={10} py={2}>
-        <Box boxShadow={1} p={1} borderRadius={2} >
+        <Box boxShadow={1} p={1} borderRadius={2}>
           <Typography variant="h3" fontWeight={700} py={2} pl={1}>
             Your Shopping Cart
           </Typography>
