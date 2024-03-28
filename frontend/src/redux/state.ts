@@ -17,6 +17,7 @@ interface AuthState {
     user: User | null;
     token: string | null;
     posts: Post[];
+    cart: []
 }
 
 interface SetLoginPayload {
@@ -37,13 +38,25 @@ const initialState: AuthState = {
     mode: "light",
     user: null,
     token: null,
-    posts: []
+    posts: [],
+    cart: []
 }
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        addToCart: (state, action) => {
+            const { id, quantity } = action.payload;
+            const existingItem = state.cart.find(item => item.id === id);
+
+            if (!existingItem) {
+                state.cart.push(action.payload);
+            } else {
+                existingItem.quantity += quantity;
+            }
+
+        },
         setMode: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light"
         },
@@ -78,5 +91,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const { setMode, setLogin, setLogout, setFriends, setPost, setPosts } = authSlice.actions;
+export const { setMode, setLogin, setLogout, setFriends, setPost, setPosts, addToCart } = authSlice.actions;
 export default authSlice.reducer

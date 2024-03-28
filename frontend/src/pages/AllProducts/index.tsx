@@ -21,9 +21,9 @@ export default function AllProducts() {
       <Box>
         <Carousel swipeable responsive={responsive}>
           {allProducts.length > 0 &&
-            allProducts?.map((item) => (
-              <AllProduct key={item.id} item={item} />
-            ))}
+            allProducts?.map((item) => {
+              return <AllProduct key={item.id} item={item} />;
+            })}
         </Carousel>
       </Box>
     </Box>

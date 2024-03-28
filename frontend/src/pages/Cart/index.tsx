@@ -11,8 +11,18 @@ import {
 } from "@mui/material";
 import CartItem from "../../components/Cart";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import navLogo from "../../assets/images/nav-logo.svg";
 
+// rzp_test_ZKW9P6DhoEOS2s
 const Cart = () => {
+  const cart = useSelector((state: any) => state.cart);
+
+  const totalPrice = cart.reduce((acc: any, next: any) => {
+    return acc + next.price * next.quantity;
+  }, 0);
+
   function loadScript(src: any) {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -31,27 +41,35 @@ const Cart = () => {
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
+
+    console.log("🚀 ~ displayRazorpay ~ res:", res);
     if (!res) {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
 
-    const result = await axios.post("http://localhost:8000/orders");
+    // creating a new order
+    const result = await axios.post("http://localhost:8000/payment/orders", {
+      amount: totalPrice * 100,
+      orderId: uuidv4(),
+    });
+    console.log("🚀 ~ displayRazorpay ~ result:", result);
 
     if (!result) {
       alert("Server error. Are you online?");
       return;
     }
 
+    // Getting the order details back
     const { amount, id: order_id, currency } = result.data;
 
     const options = {
       key: "rzp_test_ZKW9P6DhoEOS2s",
       amount: amount.toString(),
       currency: currency,
-      name: "Soumya Corp.",
+      name: "Abhishek Corp.",
       description: "Test Transaction",
-      // image: { "" },
+      image: { navLogo },
       order_id: order_id,
       handler: async function (response: any) {
         const data = {
@@ -61,43 +79,51 @@ const Cart = () => {
           razorpaySignature: response.razorpay_signature,
         };
 
-        const result = await axios.post("http://localhost:8000/orders", data);
-
+        const result = await axios.post(
+          "http://localhost:8000/payment/success",
+          data
+        );
+        alert("payment success");
         alert(result.data.msg);
       },
-      prefill: {
-        name: "Soumya Dey",
-        email: "SoumyaDey@example.com",
-        contact: "9999999999",
-      },
       notes: {
-        address: "Amazon Corporate Office",
+        address: "Abhishek Corporate Office",
       },
       theme: {
         color: "#61dafb",
       },
     };
-
+    // @ts-ignore
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   }
+
   return (
-    <Box
-      display={"flex"}
-      justifyContent={"space-between"}
-      mt={9}
-      minHeight={"100dvh"}
-    >
+    <Box display={"flex"} justifyContent={"space-between"} minHeight={"70dvh"}>
       <Box flex={4} px={10} py={2}>
-        <Box boxShadow={3} p={1} borderRadius={2}>
+        <Box boxShadow={1} p={1} borderRadius={2} >
           <Typography variant="h3" fontWeight={700} py={2} pl={1}>
             Your Shopping Cart
           </Typography>
           <Divider />
           <Stack gap={3}>
-            {[1, 2].map((item) => (
-              <CartItem key={item} />
-            ))}
+            {cart.length <= 0 ? (
+              <Box
+                display={"flex"}
+                alignItems="center"
+                justifyContent={"center"}
+                pt={3}
+                gap={3}
+              >
+                <Typography variant="h3">
+                  Your shopping bag is empty.
+                </Typography>
+              </Box>
+            ) : (
+              cart.map((item: any, index: number) => (
+                <CartItem key={index} item={item} />
+              ))
+            )}
           </Stack>
           <Box
             mt={2}
@@ -106,10 +132,12 @@ const Cart = () => {
             width={"100%"}
             justifyContent={"end"}
           >
-            <Typography variant="h4" fontWeight={800} color={"#333"}>
-              Subtotal (1 item) -{" "}
-              <Chip color="error" size="medium" label={"$999"} />
-            </Typography>
+            {cart.length > 0 && (
+              <Typography variant="h4" fontWeight={800} color={"#333"}>
+                Subtotal ({cart.length} Items) -{" "}
+                <Chip color="error" size="medium" label={`₹ ${totalPrice}`} />
+              </Typography>
+            )}
           </Box>
         </Box>
       </Box>
@@ -117,8 +145,12 @@ const Cart = () => {
         <Card>
           <CardContent>
             <Typography variant="h4">
-              Subtotal (1 item) -{" "}
-              <Chip color="error" size="medium" label={"$999"} />
+              Subtotal ({cart.length} Items) -{" "}
+              <Chip
+                color="error"
+                size="medium"
+                label={`₹ ${totalPrice ?? 0}`}
+              />
             </Typography>
           </CardContent>
           <CardActions>
@@ -126,6 +158,7 @@ const Cart = () => {
               fullWidth
               variant="contained"
               size="medium"
+              disabled={totalPrice === 0}
               onClick={displayRazorpay}
             >
               Checkout

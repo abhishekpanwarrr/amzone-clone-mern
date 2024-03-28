@@ -4,7 +4,7 @@ import AllProducts from "../AllProducts";
 
 const HomePage = () => {
   return (
-    <Box mt={9}>
+    <Box>
       <SliderBox />
       <AllProducts />
     </Box>

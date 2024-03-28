@@ -1,19 +1,75 @@
-import { Box, Button, Chip, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/state";
+import { useState } from "react";
+import CloseIcon from "@mui/icons-material/Close";
+import { useLocation } from "react-router-dom";
 const SingleProduct = () => {
+  const location = useLocation();
+  const product = location.state;
+
+  const [quantity, setQuantity] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  const dispatch = useDispatch();
+  const handleAddToCart = () => {
+    if (quantity === 0 || quantity === null) {
+      return alert("Please Select quantity");
+    }
+    dispatch(addToCart({ ...product, quantity }));
+    setMsg("Item added successfully");
+    setOpen(true);
+  };
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => setOpen(false)}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
-    <Box px={5} mt={12}>
+    <Box px={5} my={2} minHeight={"60dvh"}>
       <Stack
         display={"flex"}
         flexDirection={"row"}
-        borderRadius={3}
-        boxShadow={2}
+        borderRadius={5}
+        border={"1px solid rgba(0,0,0,0.2)"}
+        mx={"auto"}
+        maxWidth={1180}
       >
-        <Box p={5}>
+        <Box p={5} bgcolor={"rgba(0,0,0,0.2)"}>
           <img
-            src={
-              "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjZ8fHByb2R1Y3RzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-            }
-            alt="product-thumbnail"
+            src={product.imageurl}
+            width={500}
+            alt={product.title}
+            style={{
+              mixBlendMode: "color-burn",
+              objectFit: "contain",
+              aspectRatio: 3 / 2,
+              width: "100%",
+              height: "100%",
+            }}
           />
         </Box>
         <Box className="info" p={5}>
@@ -21,43 +77,92 @@ const SingleProduct = () => {
             Fall limited edition sneakers
           </Typography>
           <Box>
-            <Typography variant="h5" mt={2}>
-              Price: <Chip color="secondary" label={"$ 999"} />
+            <Typography variant="h5" my={2}>
+              Price: <Chip color="secondary" label={`₹ ${product.price}`} />
             </Typography>
-
-            <Stack gap={0.5} mt={2}>
-              <Typography variant="h5">Brand: samsung</Typography>
-              <Typography variant="h5">Model Name: S23 Ultra 5G</Typography>
-              <Typography variant="h5">
-                Network Service Provider: Unlocked for All Carriers
-              </Typography>
-              <Typography variant="h5">
-                Operating System: Android 13.0
-              </Typography>
-              <Typography variant="h5">Cellular Technology: 5G</Typography>
+            <Typography
+              variant="h3"
+              mb={0.5}
+              sx={{ textDecoration: "underline" }}
+            >
+              Descritption
+            </Typography>
+            <Typography variant="caption" maxWidth={500}>
+              {product.description}
+            </Typography>
+            <Stack gap={0.5} my={2}>
+              {product.extraDetails && (
+                <Box>
+                  <Typography
+                    variant="h3"
+                    mb={2}
+                    sx={{ textDecoration: "underline" }}
+                  >
+                    Extra Details
+                  </Typography>
+                  {Object.entries(product.extraDetails).map(([key, value]) => (
+                    <Typography variant="h5">
+                      <Typography variant="caption" fontWeight={700}>
+                        {key}
+                      </Typography>
+                      :{" "}
+                      <Typography variant="caption" ml={1}>
+                        {value}
+                      </Typography>
+                    </Typography>
+                  ))}
+                </Box>
+              )}
             </Stack>
-
-            <Chip label="More about this item:" sx={{ mt: 4 }} />
-            <Typography variant="body1" maxWidth={500}>
-              Immerse yourself in music with these premium wireless Bluetooth
-              headphones. Noise-cancellation technology ensures crystal-clear
-              sound quality.{" "}
-            </Typography>
-
-            <Box display={"flex"} justifyContent={"end"} mt={3} mb={3}>
-              <Button variant="contained" size="large">
+            <Divider />
+            <Box
+              display={"flex"}
+              justifyContent={"space-between"}
+              mt={3}
+              mb={3}
+              gap={5}
+            >
+              <FormControl
+                fullWidth
+                sx={{
+                  flex: 1,
+                }}
+              >
+                <InputLabel id="quantity">Quantity</InputLabel>
+                <Select
+                  labelId="quantity"
+                  value={quantity}
+                  label="Quantity"
+                  onChange={(e: any) => setQuantity(e.target.value)}
+                >
+                  <MenuItem value={1}>One</MenuItem>
+                  <MenuItem value={2}>Two</MenuItem>
+                  <MenuItem value={3}>Three</MenuItem>
+                  <MenuItem value={4}>Four</MenuItem>
+                  <MenuItem value={5}>Five</MenuItem>
+                </Select>
+              </FormControl>
+              <Button
+                sx={{
+                  flex: 1,
+                }}
+                variant="contained"
+                size="large"
+                onClick={handleAddToCart}
+              >
                 Add to Cart
               </Button>
             </Box>
           </Box>
         </Box>
       </Stack>
-      {/* <IconButton
-        className="delete-button"
-        size="small"
-        disableRipple
-        onClick={() => {}}
-      ></IconButton> */}
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={() => setOpen(false)}
+        message={msg}
+        action={action}
+      />
     </Box>
   );
 };
