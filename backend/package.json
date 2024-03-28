@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "Abhishek Panwar",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "nodemon index.js"
   },
