@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import AllProduct from "../../components/AllProduct";
-import { allProducts, responsive } from "../../data";
+import { responsive } from "../../data";
 import Carousel from "react-multi-carousel";
 
-export default function AllProducts() {
+export default function AllProducts({ products }: any) {
   return (
     <Box paddingX={10} py={3}>
       <Typography
@@ -20,9 +20,9 @@ export default function AllProducts() {
       </Typography>
       <Box>
         <Carousel swipeable responsive={responsive}>
-          {allProducts.length > 0 &&
-            allProducts?.map((item) => {
-              return <AllProduct key={item.id} item={item} />;
+          {products?.length > 0 &&
+            products?.map((item: any) => {
+              return <AllProduct key={item._id} item={item} />;
             })}
         </Carousel>
       </Box>

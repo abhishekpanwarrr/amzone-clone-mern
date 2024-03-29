@@ -15,10 +15,12 @@ import { MouseEvent, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
 import Face5Icon from "@mui/icons-material/Face5";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import CardMembershipIcon from "@mui/icons-material/CardMembership";
 import ErrorIcon from "@mui/icons-material/Error";
+import axios from "axios";
+
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -27,6 +29,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -43,8 +46,18 @@ const Signup = () => {
     }
     try {
       setLoading(true);
+      const { data } = await axios.post(
+        "http://localhost:8000/api/v1/auth/register",
+        { fullName, email, password }
+      );
+      console.log("🚀 ~ handleSubmit ~ response:", data);
+      if (data.status === 201) {
+        navigate("/");
+      }
       setLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false);
+    }
   };
   return (
     <Box

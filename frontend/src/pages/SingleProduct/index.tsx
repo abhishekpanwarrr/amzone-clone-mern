@@ -2,28 +2,30 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Divider,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
+  Skeleton,
   Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../redux/state";
-import { useState } from "react";
+import { addToCart, setSnackBarMsg } from "../../redux/state";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useLocation } from "react-router-dom";
 const SingleProduct = () => {
+  const [product, setProduct] = useState<any>({});
   const location = useLocation();
-  const product = location.state;
+  const modifiedString = location.pathname.replace("/product/", "");
 
   const [quantity, setQuantity] = useState(1);
-  const [open, setOpen] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const handleAddToCart = () => {
@@ -31,23 +33,41 @@ const SingleProduct = () => {
       return alert("Please Select quantity");
     }
     dispatch(addToCart({ ...product, quantity }));
-    setMsg("Item added successfully");
-    setOpen(true);
+    dispatch(setSnackBarMsg(`${product.name} Added in cart`));
   };
 
-  const action = (
-    <>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={() => setOpen(false)}
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/v1/product/${modifiedString}`,
+          {
+            method: "GET",
+          }
+        );
+        const data = await response.json();
+        console.log("🚀 ~ data:", data);
+        setProduct(data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        setProduct({});
+      }
+    })();
+  }, [modifiedString]);
+  if (loading) {
+    return (
+      <Box
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+        width={"80%"}
+        mx={"auto"}
+        minHeight={"60dvh"}
       >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </>
-  );
-
+        <CircularProgress size={50} />
+      </Box>
+    );
+  }
   return (
     <Box px={5} my={2} minHeight={"60dvh"}>
       <Stack
@@ -60,9 +80,9 @@ const SingleProduct = () => {
       >
         <Box p={5} bgcolor={"rgba(0,0,0,0.2)"}>
           <img
-            src={product.imageurl}
+            src={product.imageUrl}
             width={500}
-            alt={product.title}
+            alt={product.name}
             style={{
               mixBlendMode: "color-burn",
               objectFit: "contain",
@@ -74,7 +94,7 @@ const SingleProduct = () => {
         </Box>
         <Box className="info" p={5}>
           <Typography variant="h3" fontWeight={700}>
-            Fall limited edition sneakers
+            {product.name}
           </Typography>
           <Box>
             <Typography variant="h5" my={2}>
@@ -107,6 +127,7 @@ const SingleProduct = () => {
                       </Typography>
                       :{" "}
                       <Typography variant="caption" ml={1}>
+                        {/* @ts-ignore */}
                         {value}
                       </Typography>
                     </Typography>
@@ -156,13 +177,6 @@ const SingleProduct = () => {
           </Box>
         </Box>
       </Stack>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={() => setOpen(false)}
-        message={msg}
-        action={action}
-      />
     </Box>
   );
 };

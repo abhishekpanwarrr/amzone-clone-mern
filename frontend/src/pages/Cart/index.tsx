@@ -11,13 +11,17 @@ import {
 } from "@mui/material";
 import CartItem from "../../components/Cart";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+// @ts-ignore
 import { v4 as uuidv4 } from "uuid";
 import navLogo from "../../assets/images/nav-logo.svg";
+import { clearCart, setSnackBarMsg } from "../../redux/state";
+import { useNavigate } from "react-router-dom";
 
-// rzp_test_ZKW9P6DhoEOS2s
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const totalPrice = cart.reduce((acc: any, next: any) => {
     return acc + next.price * next.quantity;
@@ -46,10 +50,13 @@ const Cart = () => {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
-    const result = await axios.post("http://localhost:8000/payment/orders", {
-      amount: totalPrice,
-      orderId: uuidv4(),
-    });
+    const result = await axios.post(
+      "http://localhost:8000/api/v1/payment/orders",
+      {
+        amount: totalPrice,
+        orderId: uuidv4(),
+      }
+    );
 
     if (!result) {
       alert("Server error. Are you online?");
@@ -74,12 +81,11 @@ const Cart = () => {
         };
 
         const result = await axios.post(
-          "http://localhost:8000/payment/verify",
+          "http://localhost:8000/api/v1/payment/verify",
           data
         );
         if (result.status === 200) {
-          alert("payment success");
-          alert(result.data.message);
+          await handleCartAndRedirect();
         } else {
           alert("Something went wrong please connect with us.");
         }
@@ -88,13 +94,18 @@ const Cart = () => {
         address: "Abhishek Corporate Office",
       },
       theme: {
-        color: "#61dafb",
+        color: "#00353F",
       },
     };
     // @ts-ignore
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   }
+  const handleCartAndRedirect = async () => {
+    await dispatch(clearCart());
+    await navigate("/home");
+    dispatch(setSnackBarMsg(`Order placed successfully`));
+  };
 
   return (
     <Box display={"flex"} justifyContent={"space-between"} minHeight={"70dvh"}>

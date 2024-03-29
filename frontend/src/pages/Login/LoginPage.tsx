@@ -16,13 +16,18 @@ import { AccountCircle } from "@mui/icons-material";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import LoadingButton from "@mui/lab/LoadingButton";
 import StorefrontIcon from "@mui/icons-material/Storefront";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../redux/state";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -38,11 +43,24 @@ const LoginPage = () => {
     }
     try {
       setLoading(true);
-      console.log("email", email);
-      console.log("password", password);
-
+      const { data } = await axios.post(
+        "http://localhost:8000/api/v1/auth/login",
+        { email, password }
+      );
+      console.log("🚀 ~ handleSubmit ~ response:", data);
+      if (data.status === 200) {
+        dispatch(
+          setLogin({
+            user: data.userWithoutPassword,
+            token: data.token,
+          })
+        );
+        navigate("/home");
+      }
       setLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return (

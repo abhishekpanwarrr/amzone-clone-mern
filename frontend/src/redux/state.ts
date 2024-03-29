@@ -19,6 +19,7 @@ interface AuthState {
     posts: Post[];
     cart: []
     likedProducts: []
+    snackBarMsg: string | null
 }
 
 interface SetLoginPayload {
@@ -42,6 +43,7 @@ const initialState: AuthState = {
     posts: [],
     cart: [],
     likedProducts: [],
+    snackBarMsg: "",
 }
 
 export const authSlice = createSlice({
@@ -60,11 +62,11 @@ export const authSlice = createSlice({
         },
         removeFromCart: (state, action) => {
             const idToRemove = action.payload;
-            state.cart = state.cart.filter(item => item.id !== idToRemove);
+            state.cart = state.cart.filter(item => item._id !== idToRemove);
         },
         addToCart: (state, action) => {
-            const { id, quantity } = action.payload;
-            const existingItem = state.cart.find(item => item.id === id);
+            const { _id, quantity } = action.payload;
+            const existingItem = state.cart.find(item => item._id === _id);
 
             if (!existingItem) {
                 state.cart.push(action.payload);
@@ -75,6 +77,12 @@ export const authSlice = createSlice({
         },
         setMode: (state) => {
             state.mode = state.mode === "light" ? "dark" : "light"
+        },
+        setSnackBarMsg: (state, action) => {
+            state.snackBarMsg = action.payload
+        },
+        clearCart: (state) => {
+            state.cart = [];
         },
         setLogin: (state, action: PayloadAction<SetLoginPayload>) => {
             state.user = action.payload.user
@@ -87,5 +95,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const { setMode, setLogin, setLogout, addToCart, likeDislikeProduct, removeFromCart } = authSlice.actions;
+export const { setMode, setLogin, setLogout, addToCart, likeDislikeProduct, removeFromCart, clearCart, setSnackBarMsg } = authSlice.actions;
 export default authSlice.reducer
