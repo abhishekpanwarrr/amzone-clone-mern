@@ -51,3 +51,20 @@ export const login = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const updateUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const { email, fullName, phone } = req.body;
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      res.status(403).json({ mg: "User not found" });
+    }
+    await User.updateOne({ _id: id }, { $set: { email, fullName, phone } });
+    const updatedUser = await User.findOne({ _id: id });
+    res.status(200).json({ msg: "User updated successfully", updatedUser });
+  } catch (error) {
+    console.log("Error>>>", error);
+    res.status(500).json({ error: error.message });
+  }
+};

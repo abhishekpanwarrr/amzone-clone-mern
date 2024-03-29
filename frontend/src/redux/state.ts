@@ -8,18 +8,15 @@ export interface User {
     location: string
 }
 
-interface Post {
-    _id: string;
-}
 
 interface AuthState {
     mode: "light" | "dark";
     user: User | null;
     token: string | null;
-    posts: Post[];
     cart: []
     likedProducts: []
-    snackBarMsg: string | null
+    snackBarMsg: string | null;
+    profile: boolean
 }
 
 interface SetLoginPayload {
@@ -27,50 +24,50 @@ interface SetLoginPayload {
     token: string;
 }
 
-interface SetFriendsPayload {
-    friends: User[];
-}
-
-interface SetPostPayload {
-    post_id: string;
-    post: Post;
-}
 
 const initialState: AuthState = {
     mode: "light",
     user: null,
     token: null,
-    posts: [],
     cart: [],
     likedProducts: [],
     snackBarMsg: "",
+    profile: false
 }
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        setProfie: (state) => {
+            state.profile = !state.profile
+        },
         likeDislikeProduct: (state, action) => {
             const id = action.payload;
             const existingItemIndex = state.likedProducts.findIndex(item => item === id);
 
             if (existingItemIndex === -1) {
-                state.likedProducts.push(id); // Add the id to likedProducts array
+                // @ts-ignore
+                state.likedProducts.push(id);
             } else {
-                state.likedProducts.splice(existingItemIndex, 1); // Remove the id from likedProducts array
+                state.likedProducts.splice(existingItemIndex, 1);
             }
         },
         removeFromCart: (state, action) => {
             const idToRemove = action.payload;
+            // @ts-ignore
             state.cart = state.cart.filter(item => item._id !== idToRemove);
         },
         addToCart: (state, action) => {
             const { _id, quantity } = action.payload;
+            // @ts-ignore
             const existingItem = state.cart.find(item => item._id === _id);
 
             if (!existingItem) {
+                // @ts-ignore
                 state.cart.push(action.payload);
             } else {
+                // @ts-ignore
                 existingItem.quantity += quantity;
             }
 
@@ -86,7 +83,11 @@ export const authSlice = createSlice({
         },
         setLogin: (state, action: PayloadAction<SetLoginPayload>) => {
             state.user = action.payload.user
-            state.token = action.payload.token
+            if (state.token) {
+                state.token = state.token;
+            } else {
+                state.token = action.payload.token;
+            }
         },
         setLogout: (state) => {
             state.user = null
@@ -95,5 +96,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const { setMode, setLogin, setLogout, addToCart, likeDislikeProduct, removeFromCart, clearCart, setSnackBarMsg } = authSlice.actions;
+export const { setMode, setLogin, setLogout, addToCart, likeDislikeProduct, removeFromCart, clearCart, setSnackBarMsg, setProfie } = authSlice.actions;
 export default authSlice.reducer

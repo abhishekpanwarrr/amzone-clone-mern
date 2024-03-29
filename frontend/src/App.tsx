@@ -5,6 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import {
+  Alert,
   CssBaseline,
   IconButton,
   PaletteMode,
@@ -12,7 +13,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { themeSettings } from "./theme";
 import { useDispatch, useSelector } from "react-redux";
 import LoginPage from "./pages/Login/LoginPage";
@@ -27,26 +28,78 @@ import Legal from "./pages/Legal";
 import Terms from "./pages/Terms";
 import { setSnackBarMsg } from "./redux/state";
 import CloseIcon from "@mui/icons-material/Close";
+import Orders from "./pages/Orders";
+import ModalComponent from "./ModalComponent";
 
 const App = () => {
   const mode = useSelector((state: { mode: PaletteMode }) => state.mode);
+  const profile = useSelector((state: any) => state.profile);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const isAuth = Boolean(useSelector((state: any) => state.token));
   const msg = useSelector((state: any) => state.snackBarMsg);
-  // const isAuth = false;
+
   const dispatch = useDispatch();
   const action = (
     <>
       <IconButton
         size="small"
         aria-label="close"
-        color="inherit"
+        color="error"
         onClick={() => dispatch(setSnackBarMsg(""))}
       >
         <CloseIcon fontSize="small" />
       </IconButton>
     </>
   );
+
+  useEffect(() => {
+    if (!profile) return;
+    function handleBeforeUnload(e: any) {
+      e.preventDefault();
+      return (e.returnValue = "");
+    }
+    window.addEventListener("beforeunload", handleBeforeUnload, {
+      capture: true,
+    });
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload, {
+        capture: true,
+      });
+    };
+  }, [profile]);
+  
+    const [networkState, setNetworkState] = useState({
+      isOnline: navigator.onLine,
+      effectiveType: "",
+      downlink: 0,
+      rtt: 0,
+    });
+  
+    console.log("🚀 ~ App ~ networkState:", networkState)
+    useEffect(() => {
+      const updateNetState = () => {
+        //  @ts-ignore
+        const connection = navigator.connection;
+        if (connection) {
+          setNetworkState({
+            isOnline: navigator.onLine,
+            effectiveType: connection.effectiveType,
+            downlink: connection.downlink,
+            rtt: connection.rtt,
+          });
+        }
+      };
+      window.addEventListener("load", updateNetState);
+      window.addEventListener("online", updateNetState);
+      window.addEventListener("offline", updateNetState);
+  
+      return () => {
+        window.removeEventListener("load", updateNetState);
+        window.removeEventListener("online", updateNetState);
+        window.removeEventListener("offline", updateNetState);
+      };
+    }, []);
+
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -74,6 +127,10 @@ const App = () => {
             element={isAuth ? <Cart /> : <Navigate to="/" />}
           />
           <Route
+            path="/orders"
+            element={isAuth ? <Orders /> : <Navigate to="/" />}
+          />
+          <Route
             path="/privacy"
             element={isAuth ? <Privacy /> : <Navigate to="/" />}
           />
@@ -88,14 +145,25 @@ const App = () => {
           <Route path="*" element={<p>Not found</p>} />
         </Routes>
         {isAuth && <Footer />}
+
         {/* Snackbar */}
         <Snackbar
           open={msg}
           autoHideDuration={2000}
           onClose={() => dispatch(setSnackBarMsg(""))}
-          message={msg}
           action={action}
-        />
+        >
+          <Alert
+            onClose={() => dispatch(setSnackBarMsg(""))}
+            severity="info"
+            variant="filled"
+            color="info"
+            sx={{ width: "100%" }}
+          >
+            {msg}
+          </Alert>
+        </Snackbar>
+        <ModalComponent open={profile} />
       </ThemeProvider>
     </Router>
   );

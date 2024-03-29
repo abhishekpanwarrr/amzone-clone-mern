@@ -81,18 +81,20 @@ const SliderBox = ({ products }: any) => {
       </Carousel>
 
       <Box paddingX={10}>
-        <Typography
-          variant="h3"
-          fontWeight={"bold"}
-          sx={{
-            textDecoration: "underline",
-          }}
-          my={2}
-          ml={2}
-        >
-          {" "}
-          Newly added products
-        </Typography>
+        {products.length > 0 && (
+          <Typography
+            variant="h3"
+            fontWeight={"bold"}
+            sx={{
+              textDecoration: "underline",
+            }}
+            my={2}
+            ml={2}
+          >
+            {" "}
+            Newly added products
+          </Typography>
+        )}
         <Carousel swipeable responsive={responsive}>
           {products.length > 0 &&
             products?.map((item: any) => (

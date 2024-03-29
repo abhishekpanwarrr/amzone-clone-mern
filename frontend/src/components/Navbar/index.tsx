@@ -11,10 +11,10 @@ import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge, Box, Divider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogout } from "../../redux/state";
+import { setLogout, setProfie } from "../../redux/state";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -70,6 +70,7 @@ const Navbar = () => {
     setAnchorEl(null);
   };
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <AppBar
       position="sticky"
@@ -138,8 +139,22 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>{user?.fullName}</MenuItem>
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    dispatch(setProfie())
+                    handleClose();
+                  }}
+                >
+                  Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/orders");
+                    handleClose();
+                  }}
+                >
+                  Orders
+                </MenuItem>
                 <MenuItem onClick={handleClose}>Liked Products</MenuItem>
                 <Divider />
                 <MenuItem

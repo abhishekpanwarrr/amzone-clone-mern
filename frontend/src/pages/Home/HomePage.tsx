@@ -2,26 +2,35 @@ import { Box, CircularProgress } from "@mui/material";
 import SliderBox from "../../components/Slider";
 import AllProducts from "../AllProducts";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setSnackBarMsg } from "../../redux/state";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  
   useEffect(() => {
     (async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/v1/product", {
-          method: "GET",
-        });
-        const data = await response.json();
-        setProducts(data);
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/product"
+        );
+        setProducts(response.data);
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
+        console.log("🚀 ~ error:", error);
+        if (error.code === "ERR_NETWORK") {
+          dispatch(setSnackBarMsg("Network Error! Try again later"));
+        }
         setLoading(false);
         setProducts([]);
       }
     })();
   }, []);
+
   if (loading) {
     return (
       <Box
@@ -34,6 +43,7 @@ const HomePage = () => {
       </Box>
     );
   }
+
   return (
     <Box>
       <SliderBox products={products} />

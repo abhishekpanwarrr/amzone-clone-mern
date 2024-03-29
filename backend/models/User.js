@@ -19,6 +19,11 @@ const UserSchema = new mongoose.Schema(
       required: true,
       min: 5,
     },
+    phone: {
+      type: String,
+      min: 10,
+      max: 10,
+    },
     picturePath: {
       type: String,
       default: "",

@@ -20,6 +20,9 @@ import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
+  console.log("🚀 ~ Cart ~ cart:", cart);
+  const user = useSelector((state: any) => state.user);
+  console.log("🚀 ~ Cart ~ user:", user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -74,6 +77,9 @@ const Cart = () => {
       order_id: order_id,
       handler: async function (response: any) {
         const data = {
+          totalAmount: totalPrice,
+          orderItems: cart,
+          userId: user?._id,
           orderCreationId: order_id,
           razorpayPaymentId: response.razorpay_payment_id,
           razorpayOrderId: response.razorpay_order_id,
@@ -101,10 +107,13 @@ const Cart = () => {
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
   }
+
   const handleCartAndRedirect = async () => {
-    await dispatch(clearCart());
-    await navigate("/home");
     dispatch(setSnackBarMsg(`Order placed successfully`));
+    setTimeout(() => {
+      dispatch(clearCart());
+      navigate("/home");
+    }, 1000);
   };
 
   return (
