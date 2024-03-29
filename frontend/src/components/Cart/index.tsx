@@ -18,6 +18,8 @@ const CartItem = ({ item }: any) => {
   const dispatch = useDispatch();
 
   const removeItem = (itemId: string) => {
+    console.log("🚀 ~ removeItem ~ itemId:", itemId);
+
     dispatch(removeFromCart(itemId));
   };
   return (
@@ -30,8 +32,8 @@ const CartItem = ({ item }: any) => {
         component="img"
         width={350}
         height="194"
-        image={item.imageurl}
-        alt="Paella dish"
+        image={item.imageUrl}
+        alt={item.name}
       />
       <CardContent
         sx={{
@@ -88,7 +90,7 @@ const CartItem = ({ item }: any) => {
               size="large"
               aria-label="close"
               color="inherit"
-              onClick={() => removeItem(item.id)}
+              onClick={() => removeItem(item._id)}
             >
               <DeleteIcon sx={{ color: "chocolate" }} />
             </IconButton>

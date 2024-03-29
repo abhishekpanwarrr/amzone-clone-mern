@@ -1,16 +1,10 @@
-import {
-  allProducts,
-  headerSliderData,
-  productData,
-  responsive,
-} from "../../data";
-import ProductItem from "../Products/ProductItem/indes";
+import { headerSliderData, responsive } from "../../data";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "./index.css";
 import { Box, Typography } from "@mui/material";
 import AllProduct from "../AllProduct";
-const SliderBox = () => {
+const SliderBox = ({ products }: any) => {
   return (
     <Box>
       <Carousel
@@ -100,9 +94,9 @@ const SliderBox = () => {
           Newly added products
         </Typography>
         <Carousel swipeable responsive={responsive}>
-          {productData.length > 0 &&
-            allProducts?.map((item) => (
-              <AllProduct key={item.id} item={item} />
+          {products.length > 0 &&
+            products?.map((item: any) => (
+              <AllProduct key={item._id} item={item} />
             ))}
         </Carousel>
       </Box>

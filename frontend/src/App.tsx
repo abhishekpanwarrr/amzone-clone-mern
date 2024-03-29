@@ -4,11 +4,17 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { CssBaseline, PaletteMode, ThemeProvider } from "@mui/material";
+import {
+  CssBaseline,
+  IconButton,
+  PaletteMode,
+  Snackbar,
+  ThemeProvider,
+} from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { useMemo } from "react";
 import { themeSettings } from "./theme";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoginPage from "./pages/Login/LoginPage";
 import HomePage from "./pages/Home/HomePage";
 import Signup from "./pages/Signup/Signup";
@@ -19,13 +25,28 @@ import Footer from "./components/Footer";
 import Privacy from "./pages/Privacy";
 import Legal from "./pages/Legal";
 import Terms from "./pages/Terms";
+import { setSnackBarMsg } from "./redux/state";
+import CloseIcon from "@mui/icons-material/Close";
 
 const App = () => {
   const mode = useSelector((state: { mode: PaletteMode }) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  // const isAuth = Boolean(useSelector((state: any) => state.token));
-  const isAuth = true;
-
+  const isAuth = Boolean(useSelector((state: any) => state.token));
+  const msg = useSelector((state: any) => state.snackBarMsg);
+  // const isAuth = false;
+  const dispatch = useDispatch();
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => dispatch(setSnackBarMsg(""))}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
   return (
     <Router>
       <ThemeProvider theme={theme}>
@@ -67,6 +88,14 @@ const App = () => {
           <Route path="*" element={<p>Not found</p>} />
         </Routes>
         {isAuth && <Footer />}
+        {/* Snackbar */}
+        <Snackbar
+          open={msg}
+          autoHideDuration={2000}
+          onClose={() => dispatch(setSnackBarMsg(""))}
+          message={msg}
+          action={action}
+        />
       </ThemeProvider>
     </Router>
   );

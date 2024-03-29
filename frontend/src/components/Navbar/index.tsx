@@ -12,8 +12,9 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
-import { Badge, Box } from "@mui/material";
-import { useSelector } from "react-redux";
+import { Badge, Box, Divider } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "../../redux/state";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,9 +59,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = () => {
-  const [auth, setAuth] = useState(true);
+  const user = useSelector((state: any) => state.user);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state: any) => state.cart);
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,6 +69,7 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const dispatch = useDispatch();
   return (
     <AppBar
       position="sticky"
@@ -100,7 +102,7 @@ const Navbar = () => {
         </Search>
 
         <Box display={"flex"} justifyContent={"space-between"}>
-          {auth && (
+          {user?.email && (
             <div
               style={{
                 marginLeft: 20,
@@ -136,10 +138,18 @@ const Navbar = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
+                <MenuItem onClick={handleClose}>{user?.fullName}</MenuItem>
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
                 <MenuItem onClick={handleClose}>Liked Products</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <Divider />
+                <MenuItem
+                  onClick={() => {
+                    dispatch(setLogout());
+                    handleClose();
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
             </div>
           )}
