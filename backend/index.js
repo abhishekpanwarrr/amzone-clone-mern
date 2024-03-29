@@ -1,37 +1,45 @@
-import express from "express"
-import dotenv from "dotenv"
-import cors from "cors"
-import paymentRouter from "./routes/payments.routes.js"
+import mongoose from "mongoose";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import paymentRouter from "./routes/payments.routes.js";
+import productRouter from "./routes/products.routes.js";
+import authRouter from "./routes/auth.routes.js";
 
-const app = express();
+// Load environment variables from .env file
 dotenv.config();
-const port = 8000;
+const app = express();
 
 // middlewares
 app.use(express.json({ extended: false }));
 app.use(cors());
-app.listen(8000, () => console.log(`server started on port ${port}`));
-app.use("/payment", paymentRouter)
 
-// app.post("/orders", async (req, res) => {
-//   try {
-//     const instance = new Razorpay({
-//       key_id: process.env.RAZORPAY_KEY_ID,
-//       key_secret: process.env.RAZORPAY_SECRET,
-//     });
+// ROUTES
+app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/product", productRouter);
+app.use("/api/v1/auth", authRouter);
 
-//     const options = {
-//       amount: 50000, // amount in smallest currency unit
-//       currency: "INR",
-//       receipt: "receipt_order_74394",
-//     };
+// MONGOOSE SETUP
+const connectDB = async () => {
+  try {
+    const connectionInstance = await mongoose.connect(process.env.MONGO_URL, {
+      dbName: "amazon-clone",
+    });
+    console.log(
+      `\n MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`
+    );
+  } catch (error) {
+    console.log("MONGODB connection FAILED ", error);
+    process.exit(1);
+  }
+};
 
-//     const order = await instance.orders.create(options);
-
-//     if (!order) return res.status(500).send("Some error occured");
-
-//     res.json(order);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 9000, () => {
+      console.log(`⚙️ Server is running at port : ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MONGO db connection failed !!! ", err);
+  });
