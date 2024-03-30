@@ -15,6 +15,9 @@ app.use(express.json({ extended: false }));
 app.use(cors());
 
 // ROUTES
+app.get("/", async (req, res) => {
+  res.send("Hello world");
+});
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/auth", authRouter);
