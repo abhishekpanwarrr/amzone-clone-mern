@@ -39,6 +39,7 @@ const App = () => {
   const msg = useSelector((state: any) => state.snackBarMsg);
 
   const dispatch = useDispatch();
+  
   const action = (
     <>
       <IconButton
@@ -52,54 +53,7 @@ const App = () => {
     </>
   );
 
-  useEffect(() => {
-    if (!profile) return;
-    function handleBeforeUnload(e: any) {
-      e.preventDefault();
-      return (e.returnValue = "");
-    }
-    window.addEventListener("beforeunload", handleBeforeUnload, {
-      capture: true,
-    });
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload, {
-        capture: true,
-      });
-    };
-  }, [profile]);
   
-    const [networkState, setNetworkState] = useState({
-      isOnline: navigator.onLine,
-      effectiveType: "",
-      downlink: 0,
-      rtt: 0,
-    });
-  
-    console.log("🚀 ~ App ~ networkState:", networkState)
-    useEffect(() => {
-      const updateNetState = () => {
-        //  @ts-ignore
-        const connection = navigator.connection;
-        if (connection) {
-          setNetworkState({
-            isOnline: navigator.onLine,
-            effectiveType: connection.effectiveType,
-            downlink: connection.downlink,
-            rtt: connection.rtt,
-          });
-        }
-      };
-      window.addEventListener("load", updateNetState);
-      window.addEventListener("online", updateNetState);
-      window.addEventListener("offline", updateNetState);
-  
-      return () => {
-        window.removeEventListener("load", updateNetState);
-        window.removeEventListener("online", updateNetState);
-        window.removeEventListener("offline", updateNetState);
-      };
-    }, []);
-
   return (
     <Router>
       <ThemeProvider theme={theme}>
