@@ -37,7 +37,7 @@ export default function ModalComponent({ open }: any) {
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/auth/update/${user?._id}`,
+        `https://amzone-clone-backend.vercel.app/api/v1/auth/update/${user?._id}`,
         { email, phone, fullName }
       );
       console.log("response", response);

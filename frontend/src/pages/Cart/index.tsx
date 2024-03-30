@@ -54,7 +54,7 @@ const Cart = () => {
       return;
     }
     const result = await axios.post(
-      "http://localhost:8000/api/v1/payment/orders",
+      "https://amzone-clone-backend.vercel.app/api/v1/payment/orders",
       {
         amount: totalPrice,
         orderId: uuidv4(),
@@ -87,7 +87,7 @@ const Cart = () => {
         };
 
         const result = await axios.post(
-          "http://localhost:8000/api/v1/payment/verify",
+          "https://amzone-clone-backend.vercel.app/api/v1/payment/verify",
           data
         );
         if (result.status === 200) {

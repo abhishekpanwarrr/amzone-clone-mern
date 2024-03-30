@@ -41,7 +41,7 @@ const SingleProduct = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:8000/api/v1/product/${modifiedString}`,
+          `https://amzone-clone-backend.vercel.app/api/v1/product/${modifiedString}`,
           {
             method: "GET",
           }

@@ -16,7 +16,7 @@ const HomePage = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/product"
+          "https://amzone-clone-backend.vercel.app/api/v1/product"
         );
         setProducts(response.data);
         setLoading(false);

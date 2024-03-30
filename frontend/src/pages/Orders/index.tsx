@@ -22,7 +22,7 @@ const Orders = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:8000/api/v1/payment/${user?._id}`
+          `https://amzone-clone-backend.vercel.app/api/v1/payment/${user?._id}`
         );
         if (response.status === 200) {
           setOrders(response.data.data);

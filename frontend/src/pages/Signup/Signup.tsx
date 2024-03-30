@@ -47,7 +47,7 @@ const Signup = () => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        "http://localhost:8000/api/v1/auth/register",
+        "https://amzone-clone-backend.vercel.app/api/v1/auth/register",
         { fullName, email, password }
       );
       console.log("🚀 ~ handleSubmit ~ response:", data);
