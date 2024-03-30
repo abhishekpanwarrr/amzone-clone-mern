@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardMedia,
@@ -14,12 +13,9 @@ import { removeFromCart } from "../../redux/state";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const CartItem = ({ item }: any) => {
-  // const removeItem =() =>{}
   const dispatch = useDispatch();
 
   const removeItem = (itemId: string) => {
-    console.log("🚀 ~ removeItem ~ itemId:", itemId);
-
     dispatch(removeFromCart(itemId));
   };
   return (

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-const ProductItem = ({ name, url, price, description }) => {
+const ProductItem = ({ name, url, price, description }: any) => {
   return (
     <div className="card">
       <img className="product--image" src={url} alt="product image" />

@@ -5,19 +5,15 @@ import {
   CircularProgress,
   Divider,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
-  Skeleton,
-  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { addToCart, setSnackBarMsg } from "../../redux/state";
 import { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
 import { useLocation } from "react-router-dom";
 const SingleProduct = () => {
   const [product, setProduct] = useState<any>({});
@@ -47,7 +43,6 @@ const SingleProduct = () => {
           }
         );
         const data = await response.json();
-        console.log("🚀 ~ data:", data);
         setProduct(data);
         setLoading(false);
       } catch (error) {

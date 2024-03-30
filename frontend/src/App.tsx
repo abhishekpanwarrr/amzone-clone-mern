@@ -13,7 +13,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { themeSettings } from "./theme";
 import { useDispatch, useSelector } from "react-redux";
 import LoginPage from "./pages/Login/LoginPage";
@@ -39,7 +39,7 @@ const App = () => {
   const msg = useSelector((state: any) => state.snackBarMsg);
 
   const dispatch = useDispatch();
-  
+
   const action = (
     <>
       <IconButton
@@ -53,7 +53,6 @@ const App = () => {
     </>
   );
 
-  
   return (
     <Router>
       <ThemeProvider theme={theme}>

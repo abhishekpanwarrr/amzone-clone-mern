@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { Avatar, Box, Stack, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import state, { setLogin, setProfie, setSnackBarMsg } from "./redux/state";
+import { setLogin, setProfie, setSnackBarMsg } from "./redux/state";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
