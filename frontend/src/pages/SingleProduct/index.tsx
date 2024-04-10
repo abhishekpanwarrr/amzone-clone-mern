@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { addToCart, setSnackBarMsg } from "../../redux/state";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { BACKEND_URL } from "../../utils/util";
 const SingleProduct = () => {
   const [product, setProduct] = useState<any>({});
   const location = useLocation();
@@ -37,7 +38,7 @@ const SingleProduct = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://amzone-clone-backend.vercel.app/api/v1/product/${modifiedString}`,
+          `${BACKEND_URL}/product/${modifiedString}`,
           {
             method: "GET",
           }

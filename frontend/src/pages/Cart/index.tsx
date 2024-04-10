@@ -17,12 +17,11 @@ import { v4 as uuidv4 } from "uuid";
 import navLogo from "../../assets/images/nav-logo.svg";
 import { clearCart, setSnackBarMsg } from "../../redux/state";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../utils/util";
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
-  console.log("🚀 ~ Cart ~ cart:", cart);
   const user = useSelector((state: any) => state.user);
-  console.log("🚀 ~ Cart ~ user:", user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -54,7 +53,7 @@ const Cart = () => {
       return;
     }
     const result = await axios.post(
-      "https://amzone-clone-backend.vercel.app/api/v1/payment/orders",
+      `${BACKEND_URL}/payment/orders`,
       {
         amount: totalPrice,
         orderId: uuidv4(),
@@ -87,7 +86,7 @@ const Cart = () => {
         };
 
         const result = await axios.post(
-          "https://amzone-clone-backend.vercel.app/api/v1/payment/verify",
+          `${BACKEND_URL}/payment/verify`,
           data
         );
         if (result.status === 200) {

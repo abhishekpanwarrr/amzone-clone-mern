@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { BACKEND_URL } from "../../utils/util";
 
 const Orders = () => {
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ const Orders = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `https://amzone-clone-backend.vercel.app/api/v1/payment/${user?._id}`
+          `${BACKEND_URL}/payment/${user?._id}`
         );
         if (response.status === 200) {
           setOrders(response.data.data);

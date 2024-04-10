@@ -13,6 +13,7 @@ import { setLogin, setProfie, setSnackBarMsg } from "./redux/state";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { BACKEND_URL } from "./utils/util";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -37,7 +38,7 @@ export default function ModalComponent({ open }: any) {
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        `https://amzone-clone-backend.vercel.app/api/v1/auth/update/${user?._id}`,
+        `${BACKEND_URL}/auth/update/${user?._id}`,
         { email, phone, fullName }
       );
       console.log("response", response);

@@ -20,6 +20,7 @@ import DiamondIcon from "@mui/icons-material/Diamond";
 import CardMembershipIcon from "@mui/icons-material/CardMembership";
 import ErrorIcon from "@mui/icons-material/Error";
 import axios from "axios";
+import { BACKEND_URL } from "../../utils/util";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,10 +47,11 @@ const Signup = () => {
     }
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        "https://amzone-clone-backend.vercel.app/api/v1/auth/register",
-        { fullName, email, password }
-      );
+      const { data } = await axios.post(`${BACKEND_URL}/auth/register`, {
+        fullName,
+        email,
+        password,
+      });
       console.log("🚀 ~ handleSubmit ~ response:", data);
       if (data.status === 201) {
         navigate("/");

@@ -20,6 +20,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../redux/state";
+import { BACKEND_URL } from "../../utils/util";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,10 +44,10 @@ const LoginPage = () => {
     }
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        "https://amzone-clone-backend.vercel.app/api/v1/auth/login",
-        { email, password }
-      );
+      const { data } = await axios.post(`${BACKEND_URL}/auth/login`, {
+        email,
+        password,
+      });
       console.log("🚀 ~ handleSubmit ~ response:", data);
       if (data.status === 200) {
         dispatch(

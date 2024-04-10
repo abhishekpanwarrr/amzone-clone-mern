@@ -5,19 +5,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setSnackBarMsg } from "../../redux/state";
+import { BACKEND_URL } from "../../utils/util";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     (async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          "https://amzone-clone-backend.vercel.app/api/v1/product"
-        );
+        const response = await axios.get(`${BACKEND_URL}/product`);
         setProducts(response.data);
         setLoading(false);
       } catch (error: any) {
